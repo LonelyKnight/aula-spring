@@ -24,6 +24,8 @@ public class Bank {
 		this.code = code;
 
 		banks.add(this);
+		new Client(this, "ID01", "Zé", 22); //TODO
+		new Client(this, "ID02", "Manel", 44); //TODO
 	}
 
 	private void checkCode(String code) {

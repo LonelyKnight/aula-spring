@@ -11,40 +11,39 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import pt.ulisboa.tecnico.softeng.bank.domain.Bank;
 import pt.ulisboa.tecnico.softeng.bank.domain.Client;
-import pt.ulisboa.tecnico.softeng.bank.dto.BankDto;
 import pt.ulisboa.tecnico.softeng.bank.dto.ClientDto;
 import pt.ulisboa.tecnico.softeng.bank.exception.BankException;
 
 @Controller
-@RequestMapping(value = "/banks")
-public class BankController {
-	private static Logger logger = LoggerFactory.getLogger(BankController.class);
+@RequestMapping(value = "/banks/bank/{code}/clients")
+public class ClientController {
+	private static Logger logger = LoggerFactory.getLogger(ClientController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String bankForm(Model model) {
-		logger.info("bankForm");
-		model.addAttribute("bank", new BankDto());
-		model.addAttribute("banks", Bank.banks);
-		return "banksView";
+	public String clientForm(Model model, @PathVariable String code) {
+		logger.info("clientForm");
+		model.addAttribute("client", new ClientDto());
+		model.addAttribute("bank", Bank.getBankByCode(code));
+		return "bankView";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String bankSubmit(Model model, @ModelAttribute BankDto bankDto) {
-		logger.info("bankSubmit name:{}, code:{}", bankDto.getName(), bankDto.getCode());
+	public String clientSubmit(Model model,  @PathVariable String code, @ModelAttribute ClientDto client) {
+		logger.info("clientSubmit id:{}, name:{}, age:{}", client.getId(), client.getName(), client.getAge());
 
 		try {
-			new Bank(bankDto.getName(), bankDto.getCode());
+			new Client(Bank.getBankByCode(code), client.getId(), client.getName(), client.getAge());
 		} catch (BankException be) {
-			model.addAttribute("error", "Error: it was not possible to create the bank");
-			model.addAttribute("bank", bankDto);
-			model.addAttribute("banks", Bank.banks);
-			return "banksView";
+			model.addAttribute("error", "Error: it was not possible to create the client");
+			model.addAttribute("client", client);
+			model.addAttribute("bank", Bank.getBankByCode(code));
+			return "bankView";
 		}
 
-		return "redirect:/banks";
+		return "redirect:/banks/bank/" + code + "/clients";
 	}
 
-/*	@RequestMapping(value = "/bank/{code}", method = RequestMethod.GET)
+	/*@RequestMapping(value = "/bank/{code}", method = RequestMethod.GET)
 	public String showBank(Model model, @PathVariable String code) {
 		logger.info("showBank code:{}", code);
 
@@ -53,6 +52,4 @@ public class BankController {
 		model.addAttribute("bank", bank);
 		return "bankView";
 	}*/
-	
-
 }
