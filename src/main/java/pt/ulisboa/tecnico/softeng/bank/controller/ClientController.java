@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.softeng.bank.controller;
 
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -43,13 +45,17 @@ public class ClientController {
 		return "redirect:/banks/bank/" + code + "/clients";
 	}
 
-	/*@RequestMapping(value = "/bank/{code}", method = RequestMethod.GET)
-	public String showBank(Model model, @PathVariable String code) {
-		logger.info("showBank code:{}", code);
+	@RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
+	public String showClient(Model model, @PathVariable String code, @PathVariable String id) {
+		logger.info("showClient id:{}", id);
 
-		Bank bank = Bank.getBankByCode(code);
+		for(Client client : Bank.getBankByCode(code).getClients()) {
+			if(client.getId().equals(id)) {
+				model.addAttribute("client", client);
+				break;
+			}
+		}
 		
-		model.addAttribute("bank", bank);
-		return "bankView";
-	}*/
+		return "clientView";
+	}
 }
