@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.softeng.bank.domain;
 
+import pt.ulisboa.tecnico.softeng.bank.exception.BankException;
+
 public class Client {
 	private Bank bank;
 	private String id;
@@ -10,12 +12,21 @@ public class Client {
 	}
 
 	public Client(Bank bank, String id, String name, int age) {
+		checkId(id,bank);
 		this.bank = bank;
 		this.id = id;
 		this.name = name;
 		this.age = age;
 
 		bank.addClient(this);
+	}
+	
+	private void checkId(String id, Bank bank) {
+		for(Client client : bank.getClients()) {
+			if(client.getId().equals(id)) {
+				throw new BankException();
+			}
+		}
 	}
 
 	public Bank getBank() {

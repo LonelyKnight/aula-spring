@@ -52,10 +52,10 @@ public class ClientController {
 		for(Client client : Bank.getBankByCode(code).getClients()) {
 			if(client.getId().equals(id)) {
 				model.addAttribute("client", client);
-				break;
+				return "clientView";
 			}
 		}
 		
-		return "clientView";
+		return null;
 	}
 }
